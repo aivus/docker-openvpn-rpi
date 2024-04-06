@@ -14,11 +14,3 @@ Check [README.md](https://github.com/nuBacuk/docker-openvpn?tab=readme-ov-file) 
 * In case you cannot access the network from inside the container, or you are seeing `clock_gettime(MONOTONIC) failed` error
 
   Please [follow next steps](https://docs.linuxserver.io/FAQ/#libseccomp) or use `aivus/openvpn-rpi:alpine-3.12`
-
-## Supported architectures
-
-The architectures supported by this image are:
-
-| Architecture | Available | Tag   |
-| :----: | :----: |-------|
-| arm/v7 | ✅ | armv7 |
