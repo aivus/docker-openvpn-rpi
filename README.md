@@ -1,9 +1,10 @@
-# Differences from the original.
+# Differences from the original
 
+automatic build and push docker image every Monday, Wednesday, Friday  
 updated alpine and packages  
 added dns cloudflare  
 added to duplicate_cn  
-key size changed 2048 > 4096  
+key size changed 4096
 
 # OpenVPN for Docker
 
@@ -20,28 +21,38 @@ OpenVPN server in a Docker container complete with an EasyRSA PKI CA.
   use the `ovpn-data-` prefix to operate seamlessly with the reference systemd
   service.  Users are encourage to replace `example` with a descriptive name of
   their choosing.
+  
+  The architectures supported by this image are:
+
+| Architecture | Available | Tag |
+| :----: | :----: | ---- |
+| x86-64 | ✅ | x86_64 |
+| arm64 | ✅ | aarch64 |
+  
+  There are images for aarch64(arm) and x86_64
 
       OVPN_DATA="ovpn-data"
+      OVPN_PLATFORM="aarch64"
 
 * Initialize the `$OVPN_DATA` container that will hold the configuration files
   and certificates.  The container will prompt for a passphrase to protect the
   private key used by the newly generated certificate authority.
 
       docker volume create --name $OVPN_DATA
-      docker run -v $OVPN_DATA:/etc/openvpn --rm nubacuk/docker-openvpn:aarch64 ovpn_genconfig -u udp://VPN.SERVERNAME.COM
-      docker run -v $OVPN_DATA:/etc/openvpn --rm -it nubacuk/docker-openvpn:aarch64 ovpn_initpki
+      docker run -v $OVPN_DATA:/etc/openvpn --rm nubacuk/docker-openvpn:$OVPN_PLATFORM ovpn_genconfig -u udp://VPN.SERVERNAME.COM
+      docker run -v $OVPN_DATA:/etc/openvpn --rm -it nubacuk/docker-openvpn:$OVPN_PLATFORM ovpn_initpki
 
 * Start OpenVPN server process
 
-      docker run -v $OVPN_DATA:/etc/openvpn -d -p 1194:1194/udp --cap-add=NET_ADMIN --restart=always --name openvpn nubacuk/docker-openvpn:aarch64
+      docker run -v $OVPN_DATA:/etc/openvpn -d -p 1194:1194/udp --cap-add=NET_ADMIN --restart=always --name openvpn nubacuk/docker-openvpn:$OVPN_PLATFORM
 
 * Generate a client certificate without a passphrase
 
-      docker run -v $OVPN_DATA:/etc/openvpn --rm -it nubacuk/docker-openvpn:aarch64 easyrsa build-client-full CLIENTNAME nopass
+      docker run -v $OVPN_DATA:/etc/openvpn --rm -it nubacuk/docker-openvpn:$OVPN_PLATFORM easyrsa build-client-full CLIENTNAME nopass
 
 * Retrieve the client configuration with embedded certificates
 
-      docker run -v $OVPN_DATA:/etc/openvpn --rm nubacuk/docker-openvpn:aarch64 ovpn_getclient CLIENTNAME > CLIENTNAME.ovpn
+      docker run -v $OVPN_DATA:/etc/openvpn --rm nubacuk/docker-openvpn:$OVPN_PLATFORM ovpn_getclient CLIENTNAME > CLIENTNAME.ovpn
 
 ## ERRORS
 
@@ -76,7 +87,7 @@ If you prefer to use `docker-compose` please refer to the [documentation](docs/d
 
 * Create an environment variable with the name DEBUG and value of 1 to enable debug output (using "docker -e").
 
-        docker run -v $OVPN_DATA:/etc/openvpn -p 1194:1194/udp --cap-add=NET_ADMIN -e DEBUG=1 nubacuk/docker-openvpn:aarch64
+        docker run -v $OVPN_DATA:/etc/openvpn -p 1194:1194/udp --cap-add=NET_ADMIN -e DEBUG=1 nubacuk/docker-openvpn:$OVPN_PLATFORM
 
 * Test using a client that has openvpn installed correctly
 

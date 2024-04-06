@@ -1,7 +1,7 @@
 # Original credit: https://github.com/jpetazzo/dockvpn
 
 # Smallest base image
-FROM alpine:3.12
+FROM alpine:3
 
 # Testing: pamtester
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repositories && \
@@ -11,10 +11,10 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/reposi
 
 # Needed by scripts
 ENV OPENVPN=/etc/openvpn
-ENV EASYRSA=/usr/share/easy-rsa \
-    EASYRSA_KEY_SIZE=4096 \
-    EASYRSA_CRL_DAYS=3650 \
-    EASYRSA_PKI=$OPENVPN/pki
+ENV EASYRSA=/usr/share/easy-rsa
+ENV EASYRSA_KEY_SIZE=4096
+ENV EASYRSA_CRL_DAYS=3650
+ENV EASYRSA_PKI=$OPENVPN/pki
 
 VOLUME ["/etc/openvpn"]
 
