@@ -1,0 +1,22 @@
+name: Sync Fork
+
+on:
+  schedule:
+    - cron: '0 15 1 * *'
+  workflow_dispatch: ~
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: tgymnich/fork-sync@v1.9.0
+        with:
+          owner: nuBacuk
+          repo: docker-openvpn
+          base: master
+          head: master
+          pr_message: |
+            This PR contains changes pulled from the upstream repository.
+            
+            :warning: Please verify that there are not conflicts and fix them if any.
